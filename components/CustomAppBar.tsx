@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -8,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import { useTheme } from '@mui/material/styles';
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -52,9 +56,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+    const theme = useTheme();
+
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+        <Box sx={{ flexGrow: 1, width: '100%' }}>
+            <AppBar position="fixed" sx={{backgroundColor: theme.palette.secondary.main}}>
                 <Toolbar>
                     <IconButton
                         size="large"

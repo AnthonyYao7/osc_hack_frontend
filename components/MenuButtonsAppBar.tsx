@@ -16,8 +16,12 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from '@mui/material/Link';
 import {useTheme} from "@mui/material/styles";
+import {useRouter} from "next/navigation";
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = [
+  {title: 'Create Post', path: '/createPost'},
+  {title: 'Create Event', path: '/createEvent'},
+];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 interface HeaderProps {
@@ -48,7 +52,12 @@ function ResponsiveAppBar(props: HeaderProps) {
     setAnchorElUser(null);
   };
 
+  const handleClickOnMenuOption = (event: React.MouseEvent<HTMLElement>, path: string) => {
+    router.push(path);
+  }
+
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <Box sx={{flexGrow: 1, width: '100%'}}>
@@ -60,7 +69,7 @@ function ResponsiveAppBar(props: HeaderProps) {
               variant="h6"
               noWrap
               component="a"
-              href="#app-bar-with-responsive-menu"
+              href="/"
               sx={{
                 mr: 2,
                 display: {xs: 'none', md: 'flex'},
@@ -104,8 +113,10 @@ function ResponsiveAppBar(props: HeaderProps) {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                  <MenuItem key={page.title} onClick={function(...args) {
+                    return handleClickOnMenuOption(...args, page.path);
+                  }}>
+                    <Typography textAlign="center">{page.title}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -132,11 +143,13 @@ function ResponsiveAppBar(props: HeaderProps) {
             <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
               {pages.map((page) => (
                 <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
+                  key={page.title}
+                  onClick={function(...args) {
+                    return handleClickOnMenuOption(...args, page.path);
+                  }}
                   sx={{my: 2, color: 'white', display: 'block'}}
                 >
-                  {page}
+                  {page.title}
                 </Button>
               ))}
             </Box>

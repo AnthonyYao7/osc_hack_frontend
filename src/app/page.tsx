@@ -43,7 +43,7 @@ export default function Home() {
     <PostsPageLayout>
       {/* TODO: Query database and get list of posts */}
       {posts.map((post) => (
-        <Post key={post.title} post={post}/>
+        <Post key={post.postID} post={post}/>
       ))}
     </PostsPageLayout>
   );

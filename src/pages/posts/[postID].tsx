@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-/* import GeneralLayout from "../../../components/GeneralLayout"; */
 import { CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText } from '@mui/material';
 import { useState, useEffect } from "react";
 
@@ -30,13 +29,13 @@ export default function Page() {
 
     useEffect(() => {
         if (router.isReady) {
-            const { postID } = router.query;
+            const { postId } = router.query;
 
             const fetchData = async () => {
                 setIsLoading(true);
                 try {
                     const res = await fetch(
-                        process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts/" + postID,
+                        process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts/" + postId,
                         {
                             method: "GET",
                             headers: {

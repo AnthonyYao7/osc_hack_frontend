@@ -86,17 +86,15 @@ export function PostComponent({ post }: PostProps) {
               <Typography variant="body2" color="text.secondary">
                 {community && `r/${community} ·`} {relativeTime}
               </Typography>
-              {club_name && (
-                <Chip
-                  label={club_name}
-                  size="small"
-                  sx={{
-                    backgroundColor: "#f50057",
-                    color: "white",
-                    borderRadius: "20px",
-                  }}
-                />
-              )}
+              <Chip
+                label={club_name}
+                size="small"
+                sx={{
+                  backgroundColor: "#f50057",
+                  color: "white",
+                  borderRadius: "20px",
+                }}
+              />
             </Box>
             <Typography
               gutterBottom

@@ -1,5 +1,4 @@
 'use client'
-
 import * as React from 'react';
 import Image from 'next/image'
 import AppBar from '@mui/material/AppBar';
@@ -94,10 +93,10 @@ function ResponsiveAppBar(props: HeaderProps) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
-		console.log(isMenuOpen);
-	}
+  const toggleMenu = () => {
+  	setIsMenuOpen(!isMenuOpen);
+  }
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -119,7 +118,7 @@ function ResponsiveAppBar(props: HeaderProps) {
 
   const logoutHandler = () => {
     deleteCookie('token');
-    router.push('/');
+    router.push('/login');
   }
 
   const router = useRouter();

@@ -1,6 +1,6 @@
 'use client'
 
-import GeneralLayout from "../../../components/GeneralLayout";
+import AuthenticatedPage from "../../../components/AuthenticatedPage";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -100,7 +100,7 @@ export default function Page() {
   }
 
   return (
-    <GeneralLayout>
+    <AuthenticatedPage>
       <Box
         sx={{
           marginTop: 8,
@@ -220,6 +220,6 @@ export default function Page() {
           </Button>
         </Box>
       </Box>
-    </GeneralLayout>
+    </AuthenticatedPage>
   );
 }

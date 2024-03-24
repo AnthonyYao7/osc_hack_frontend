@@ -18,19 +18,8 @@ import AuthenticationLayout from "../../../components/AuthenticationLayout";
 import {redirect} from "next/navigation";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
+import OurCopyright from "../../../components/OurCopyright";
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="/">
-        Anthony Yao, Prayuj Tuli, Matthew DeGuzman
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 export default function Page() {
   const router = useRouter();
@@ -152,7 +141,7 @@ export default function Page() {
           </Grid>
         </Box>
       </Box>
-      <Copyright sx={{ mt: 5 }} />
+      <OurCopyright sx={{ mt: 5 }} />
     </AuthenticationLayout>
   );
 }

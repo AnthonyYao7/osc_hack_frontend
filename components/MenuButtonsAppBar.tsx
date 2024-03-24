@@ -17,13 +17,14 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Link from '@mui/material/Link';
 import {useTheme} from "@mui/material/styles";
 import {useRouter} from "next/navigation";
+import {deleteCookie} from "cookies-next";
+import {isAuthenticated} from "@/util";
 
 const pages = [
   {title: 'Create Post', path: '/createPost'},
   {title: 'Create Event', path: '/createEvent'},
   {title: 'Create Club', path: '/createClub'}
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 interface HeaderProps {
   sections: ReadonlyArray<{
@@ -57,8 +58,31 @@ function ResponsiveAppBar(props: HeaderProps) {
     router.push(path);
   }
 
-  const theme = useTheme();
+  const logoutHandler = () => {
+    deleteCookie('token');
+  }
+
   const router = useRouter();
+
+  const loginHandler = () => {
+    router.push('/login');
+  }
+
+  const profileHandler = () => {
+  }
+
+  const authenticatedSettings = [
+    {action: 'Profile', handler: profileHandler},
+    {action: 'Logout', handler: logoutHandler},
+  ]
+
+  const unauthenticatedSettings = [
+    {action: 'Login', handler: loginHandler}
+  ]
+
+  const settings = isAuthenticated() ? authenticatedSettings : unauthenticatedSettings;
+
+  const theme = useTheme();
 
   return (
     <Box sx={{flexGrow: 1, width: '100%'}}>
@@ -158,7 +182,7 @@ function ResponsiveAppBar(props: HeaderProps) {
             <Box sx={{flexGrow: 0}}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg"/>
+                  <Avatar alt="B"/>
                 </IconButton>
               </Tooltip>
               <Menu
@@ -178,8 +202,8 @@ function ResponsiveAppBar(props: HeaderProps) {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
+                  <MenuItem key={setting.action} onClick={setting.handler}>
+                    <Typography textAlign="center">{setting.action}</Typography>
                   </MenuItem>
                 ))}
               </Menu>

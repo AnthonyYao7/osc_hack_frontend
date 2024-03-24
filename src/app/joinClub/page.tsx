@@ -1,6 +1,6 @@
 'use client'
 
-import GeneralLayout from "../../../components/GeneralLayout";
+import AuthenticatedPage from "../../../components/AuthenticatedPage";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -96,7 +96,7 @@ export default function Page() {
   }, []);
 
   return (
-    <GeneralLayout>
+    <AuthenticatedPage>
       <Box sx={{
         width: '400px', // Adjust width as needed
         margin: 'auto', // Centers the box
@@ -138,6 +138,6 @@ export default function Page() {
         </TableContainer>
       </Box>
 
-    </GeneralLayout>
+    </AuthenticatedPage>
   )
 }

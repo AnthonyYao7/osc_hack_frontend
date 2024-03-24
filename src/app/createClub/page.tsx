@@ -1,6 +1,6 @@
 'use client'
 
-import GeneralLayout from "../../../components/GeneralLayout";
+import AuthenticatedPage from "../../../components/AuthenticatedPage";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import * as React from "react";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import {getCookie} from "cookies-next";
 
 
 export default function Page() {
@@ -27,6 +28,8 @@ export default function Page() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'accept': 'application/json',
+          'Authorization': 'Bearer ' + getCookie('token')
         },
         body: JSON.stringify({
           club_name: data.get('club'),
@@ -45,7 +48,7 @@ export default function Page() {
   const router = useRouter();
 
   return (
-    <GeneralLayout>
+    <AuthenticatedPage>
       <Box
         sx={{
           marginTop: 8,
@@ -95,6 +98,6 @@ export default function Page() {
         </Box>
       </Box>
 
-    </GeneralLayout>
+    </AuthenticatedPage>
   )
 }

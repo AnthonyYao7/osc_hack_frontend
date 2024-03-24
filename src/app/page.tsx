@@ -12,16 +12,26 @@ import * as React from "react";
 import PagesEventsTabs from "../../components/PagesEventsTabs";
 import { Navbar } from '../../../components/Navbar';
 import { PostComponent, Post } from "../../components/Post";
+import { EventComponent, Event } from "../../components/Event";
+
+import { getAuthenticatedHeaders } from "@/util";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [affiliations, setAffiliations] = useState<
+    {
+      club_id: string;
+      club_name: string;
+    }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(
+        const postsRes = await fetch(
           process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts",
           {
             method: "GET",
@@ -31,15 +41,46 @@ export default function Home() {
           },
         );
 
-        if (!res.ok) {
+        if (!postsRes.ok) {
           throw new Error("Data fetching failed");
         }
-        const data = await res.json();
-        const sortedPosts = data.sort(
+        const postsData = await postsRes.json();
+        const sortedPosts = postsData.sort(
           (a: Post, b: Post) =>
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
         );
         setPosts(sortedPosts);
+
+        const eventsRes = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/events",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
+        if (!eventsRes.ok) {
+          throw new Error("Data fetching failed");
+        }
+        const eventsData = await eventsRes.json();
+        const sortedEvents = eventsData["events"].sort(
+          (a: Event, b: Event) =>
+            new Date(b.event_start).getTime() - new Date(a.event_end).getTime(),
+        );
+        setEvents(sortedEvents);
+
+        const affiliationsRes = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/login/affiliations",
+          {
+            method: "GET",
+            headers: getAuthenticatedHeaders(),
+          },
+        );
+        if (!affiliationsRes.ok) {
+          throw new Error("Data fetching failed");
+        }
+        setAffiliations(await affiliationsRes.json());
       } catch (err) {
         console.log(err);
       } finally {
@@ -70,13 +111,21 @@ export default function Home() {
 
   return !isLoading ? (
     <PostsPageLayout>
-        <PagesEventsTabs value={value} handleChange={handleChange} />
+      <PagesEventsTabs value={value} handleChange={handleChange} />
 
       <Box sx={{ position: "relative", mt: 3, mb: 4, width: "100%" }}>
         {" "}
         {value === 0 &&
           posts.map((post: Post) => (
             <PostComponent key={post.post_id} post={post} />
+          ))}
+        {value === 1 &&
+          events.map((event: Event) => (
+            <EventComponent
+              key={event.event_id}
+              event={event}
+              affiliations={affiliations}
+            />
           ))}
         <a
           href={value === 0 ? "/createPost" : "/createEvent"}

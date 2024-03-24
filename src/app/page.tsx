@@ -9,8 +9,13 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import PostsPageLayout from "../../components/PostsPageLayout";
-
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 import { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import * as React from 'react';
+import PagesEventsTabs from "../../components/PagesEventsTabs";
+
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -52,13 +57,28 @@ export default function Home() {
     /* return () => clearInterval(intervalId); */
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+
+    }
+  })
+
   const theme = useTheme();
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  }
 
   return !isLoading ? (
     <PostsPageLayout>
-      {posts.map((post: Post) => (
+      <PagesEventsTabs value={value} handleChange={handleChange} />
+
+      {value == 0 && posts.map((post: Post) => (
         <PostComponent key={post.post_id} post={post} />
       ))}
+
     </PostsPageLayout>
   ) : (
     <PostsPageLayout>

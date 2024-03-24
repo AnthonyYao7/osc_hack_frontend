@@ -138,13 +138,6 @@ function ResponsiveAppBar(props: HeaderProps) {
                   display: {xs: 'block', md: 'none'},
                 }}
               >
-                {pages.map((page) => (
-                  <MenuItem key={page.title} onClick={function(...args) {
-                    return handleClickOnMenuOption(...args, page.path);
-                  }}>
-                    <Typography textAlign="center">{page.title}</Typography>
-                  </MenuItem>
-                ))}
               </Menu>
             </Box>
             <AdbIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1}}/>
@@ -167,6 +160,7 @@ function ResponsiveAppBar(props: HeaderProps) {
               LOGO
             </Typography>
             <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
+			  {/*
               {pages.map((page) => (
                 <Button
                   key={page.title}
@@ -178,6 +172,7 @@ function ResponsiveAppBar(props: HeaderProps) {
                   {page.title}
                 </Button>
               ))}
+			  */}
             </Box>
 
             <Box sx={{flexGrow: 0}}>
@@ -215,18 +210,6 @@ function ResponsiveAppBar(props: HeaderProps) {
             variant="dense"
             sx={{ justifyContent: 'space-between', overflowX: 'auto' }}
           >
-            {sections.map((section) => (
-              <Link
-                color="inherit"
-                noWrap
-                key={section.title}
-                variant="body2"
-                href={section.url}
-                sx={{ p: 1, flexShrink: 0 }}
-              >
-                {section.title}
-              </Link>
-            ))}
           </Toolbar>
         </Container>
       </AppBar>

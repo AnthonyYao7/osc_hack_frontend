@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { CircularProgress, Container, Typography, ListItem } from '@mui/material';
+import { Box, CircularProgress, Container, Typography, ListItem, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState, useEffect } from "react";
 
 import PostsPageLayout from "../../../components/PostsPageLayout";
@@ -7,6 +8,10 @@ import { Post, PostComponent } from "../../../components/Post";
 
 export default function Page() {
     const router = useRouter()
+
+    function handleBack() {
+        router.back(); // Navigates back to the previous page in history
+    }
 
     const [communityPosts, setCommunityPosts] = useState<Post[]>([])
     const [isLoading, setIsLoading] = useState(false);
@@ -61,9 +66,18 @@ export default function Page() {
     return (
         <PostsPageLayout>
             <Container>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Community Posts
-                </Typography>
+                <Box display="flex" alignItems="center" marginBottom={2}>
+                    <IconButton
+                        onClick={handleBack}
+                        aria-label="back"
+                        size="large"
+                    >
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <Typography variant="h4" component="h1" gutterBottom sx={{ flexGrow: 1, textAlign: 'center' }}>
+                        r/{router.query.communityId}
+                    </Typography>
+                </Box>
                 {isLoading ? (
                     <CircularProgress />
                 ) : (

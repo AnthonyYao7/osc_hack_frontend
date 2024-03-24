@@ -8,6 +8,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { useState, useEffect } from "react";
 
 import PostsPageLayout from "../../../components/PostsPageLayout";
+import { getAuthenticatedHeaders } from "@/util";
 
 export interface Comment {
     comment_id: string;
@@ -35,29 +36,52 @@ export default function Page() {
     const [isLoading, setIsLoading] = useState(true);
     const [showReply, setShowReply] = useState(false); // To toggle reply field
     const [replyContent, setReplyContent] = useState(""); // To hold reply text
-    const [selectedClub, setSelectedClub] = useState(""); // To hold selected club for the reply
-
-    // Dummy data for clubs, replace with actual data as needed
-    const clubs = [
-        { id: "club1", name: "Club 1" },
-        { id: "club2", name: "Club 2" },
-        { id: "club3", name: "Club 3" },
-    ];
-
+    const [clubName, setClubName] = useState(""); // To hold selected club for the reply
 
     const handleReplyChange = (event) => {
         setReplyContent(event.target.value);
     };
 
-    const handleClubChange = (event) => {
-        setSelectedClub(event.target.value);
+    const handleClubNameChange = (event) => {
+        setClubName(event.target.value);
     };
 
-    const submitReply = () => {
-        setReplyContent("");
-        setShowReply(false);
-    };
+    const submitReply = async () => {
+        console.log({
+            club_name: clubName,
+            content: replyContent
+        })
+        let resp = await fetch(
+            process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts/" + router.query.postId + "/comment",
+            {
+                method: "POST",
+                headers: getAuthenticatedHeaders(),
+                body: JSON.stringify({
+                    club_name: clubName,
+                    content: replyContent
+                })
+            },
+        );
 
+        if (resp.ok) {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/posts/${router.query.postId}`, {
+                    headers: { "Content-Type": "application/json" },
+                });
+                if (!res.ok) throw new Error("Data fetching failed");
+                const data: FullPost = await res.json();
+                setPost(data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
+
+            setReplyContent("");
+            setShowReply(false);
+            setClubName("")
+        }
+    };
     useEffect(() => {
         const fetchPost = async () => {
             if (!router.isReady) return;
@@ -159,18 +183,7 @@ export default function Page() {
                             onChange={handleReplyChange}
                             sx={{ mb: 2 }}
                         />
-                        <FormControl fullWidth>
-                            <InputLabel>Club</InputLabel>
-                            <Select
-                                value={selectedClub}
-                                label="Club"
-                                onChange={handleClubChange}
-                            >
-                                {clubs.map((club) => (
-                                    <MenuItem key={club.id} value={club.id}>{club.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                        <TextField fullWidth variant="outlined" label="Club Name" value={clubName} onChange={handleClubNameChange} />
                         <Button
                             variant="contained"
                             color="secondary"

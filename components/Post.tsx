@@ -1,51 +1,46 @@
-'use client'
+"use client";
 
-import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import * as React from "react";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardContent from "@mui/material/CardContent";
 
-interface PostProps {
-  post: {
-    date: string;
-    description: string;
-    image: string;
-    imageLabel: string;
-    title: string;
-    postID: string;
-  };
+export interface Post {
+  post_id: string;
+  author: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  community: string;
 }
 
-export default function Post(props: PostProps) {
+interface PostProps {
+  post: Post;
+}
+
+export function PostComponent(props: PostProps) {
   const { post } = props;
 
   return (
     <Grid item xs={12} md={12}>
-      <CardActionArea component="a" href={"/posts/" + post.postID}>
-        <Card sx={{ display: 'flex', border: '1px solid black' }}>
+      <CardActionArea component="a" href={"/posts/" + post.post_id}>
+        <Card sx={{ display: "flex", border: "1px solid black" }}>
           <CardContent sx={{ flex: 1 }}>
             <Typography component="h2" variant="h5">
               {post.title}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
-              {post.date}
+              {post.createdAt}
             </Typography>
             <Typography variant="subtitle1" paragraph>
-              {post.description}
+              {post.content}
             </Typography>
             <Typography variant="subtitle1" color="primary">
               Continue reading...
             </Typography>
           </CardContent>
-          <CardMedia
-            component="img"
-            sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-            image={post.image}
-            alt={post.imageLabel}
-          />
         </Card>
       </CardActionArea>
     </Grid>

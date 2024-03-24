@@ -1,50 +1,76 @@
-'use client'
+"use client";
 
 import Image from "next/image";
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
 import styles from "./page.module.css";
 import ResponsiveAppBar from "../../components/MenuButtonsAppBar";
-import Post from "../../components/Post";
+import { PostComponent, Post } from "../../components/Post";
 import Container from "@mui/material/Container";
-import {useTheme} from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material/styles";
 import PostsPageLayout from "../../components/PostsPageLayout";
 
-const sections = [
-  { title: 'Computer Science', url: '#'},
-  { title: 'Pre Health', url: '#'},
-  { title: 'Mechanical Engineering', url: '#'}
-]
+import { useState, useEffect } from "react";
 
-const posts = [
-  { date: "09/11/2001",
-    description: "what happened?",
-    image: "puppy.jpg",
-    imageLabel: "ff",
-    title: "This is awesome",
-    postID: "12nfd89"},
-  { date: "09/12/2001",
-    description: "This happened?",
-    image: "puppy.jpg",
-    imageLabel: "ff",
-    title: "This is not awesome",
-    postID: "12nfd90" },
-  { date: "09/12/2001",
-    description: "This happened?",
-    image: "puppy.jpg",
-    imageLabel: "ff",
-    title: "This is not awesome",
-    postID: "12nfd91"}
-]
+const sections = [
+  { title: "Computer Science", url: "#" },
+  { title: "Pre Health", url: "#" },
+  { title: "Mechanical Engineering", url: "#" },
+];
 
 export default function Home() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
+
+        if (!res.ok) {
+          throw new Error("Data fetching failed");
+        }
+        const data = await res.json();
+        console.log(data);
+        setPosts(data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+
+    // Set up a timer to call fetchData every 5 seconds
+    /* const intervalId = setInterval(fetchData, 5000); */
+
+    // Cleanup function to clear the interval when the component unmounts
+    /* return () => clearInterval(intervalId); */
+  }, []);
+
   const theme = useTheme();
 
-  return (
+  return !isLoading ? (
     <PostsPageLayout>
-      {/* TODO: Query database and get list of posts */}
-      {posts.map((post) => (
-        <Post key={post.postID} post={post}/>
+      {posts.map((post: Post) => (
+        <PostComponent key={post.post_id} post={post} />
       ))}
+    </PostsPageLayout>
+  ) : (
+    <PostsPageLayout>
+      <Typography variant="subtitle1" color="text.secondary">
+        Loading...
+      </Typography>
     </PostsPageLayout>
   );
 }

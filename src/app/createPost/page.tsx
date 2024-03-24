@@ -102,12 +102,7 @@ export default function Page() {
                 setCommunityInput(newValue ? newValue.id : "");
               }}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Community"
-                  margin="normal"
-                  required
-                />
+                <TextField {...params} label="Community" margin="normal" />
               )}
             />
             <TextField
@@ -119,6 +114,7 @@ export default function Page() {
               id="club_name"
               value={post.club_name}
               onChange={handleChange}
+              required
             />
             <TextField
               margin="normal"

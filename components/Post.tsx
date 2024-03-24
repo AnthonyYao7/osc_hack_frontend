@@ -1,15 +1,11 @@
-"use client";
-
 import {
   Card,
   CardActionArea,
-  CardContent,
   Typography,
   Box,
-  Chip,
   Grid,
+  Chip,
 } from "@mui/material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export interface Post {
   post_id: string;
@@ -18,6 +14,7 @@ export interface Post {
   content: string;
   created_at: string;
   community: string;
+  club_name: string; // Assuming club_name is now part of the Post interface
 }
 
 interface PostProps {
@@ -25,17 +22,14 @@ interface PostProps {
 }
 
 export function PostComponent({ post }: PostProps) {
-  const { post_id, title, content, created_at, community } = post;
+  const { post_id, title, content, created_at, community, club_name } = post;
 
-  // Convert UTC to EDT (-4 hours)
   function toEDT(dateUtc: string) {
     const date = new Date(dateUtc);
-    // Convert to EDT by subtracting 4 hours
     date.setHours(date.getHours() - 4);
     return date;
   }
 
-  // Function to calculate relative time
   function timeSince(date: Date) {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
     let interval = seconds / 31536000;
@@ -67,8 +61,6 @@ export function PostComponent({ post }: PostProps) {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} sm={11} md={10} lg={9} xl={8}>
-        {" "}
-        {/* Increased width coverage across breakpoints */}
         <Card
           sx={{
             width: "100%",
@@ -92,9 +84,19 @@ export function PostComponent({ post }: PostProps) {
               }}
             >
               <Typography variant="body2" color="text.secondary">
-                {community && `r/${community} · `}
-                {relativeTime}
+                {community && `r/${community} ·`} {relativeTime}
               </Typography>
+              {club_name && (
+                <Chip
+                  label={club_name}
+                  size="small"
+                  sx={{
+                    backgroundColor: "#f50057",
+                    color: "white",
+                    borderRadius: "20px",
+                  }}
+                />
+              )}
             </Box>
             <Typography
               gutterBottom

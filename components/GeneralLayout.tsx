@@ -3,6 +3,8 @@
 import RootLayout from "./layout";
 import ResponsiveAppBar from "./MenuButtonsAppBar";
 import { Inter } from "next/font/google";
+import { Box } from '@mui/material';
+import { Navbar } from './Navbar';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,8 +25,14 @@ export default function GeneralLayout({
   return (
     <RootLayout>
       <ResponsiveAppBar sections={sections} />
-
-      <main>{children}</main>
+	  <Box sx={{display: 'grid', gridTemplateColumns: '300px auto'}}>
+		  <Box sx={{mr: '10px', mt: 2}}>
+			<Navbar />
+		  </Box>
+		  <Box>
+			  <main>{children}</main>
+		  </Box>
+	  </Box>
     </RootLayout>
   );
 }

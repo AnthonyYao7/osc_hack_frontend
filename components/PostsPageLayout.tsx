@@ -1,10 +1,6 @@
 "use client";
 
-import Image from "next/image";
 import Grid from "@mui/material/Grid";
-import styles from "./page.module.css";
-import ResponsiveAppBar from "./MenuButtonsAppBar";
-import { Post } from "./Post";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import GeneralLayout from "./GeneralLayout";

@@ -33,7 +33,8 @@ const HeaderBar = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid;
+  border-color: var(--border-color);
 `;
 
 // Styled component for the logo and title container
@@ -67,6 +68,7 @@ const Menu = styled.div`
   flex-direction: column;
   gap: 10px;
   position: absolute;
+  z-index: 999;
   top: 61px;
   right: 15px;
   background-color: #f0f0f0;

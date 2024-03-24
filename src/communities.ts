@@ -1,4 +1,4 @@
-export const communities: string[] = [
+export const clubs: string[] = [
 	"STEM",
 	"Humanities and Social Sciences",
 	"Professional Studies",

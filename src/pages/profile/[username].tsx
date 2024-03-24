@@ -4,6 +4,7 @@ import ResponsiveAppBar from '../../../components/MenuButtonsAppBar';
 import { useState, useEffect } from "react";
 import { getCookie } from "cookies-next";
 import styled from 'styled-components';
+import { Navbar } from '../../../components/Navbar';
 
 export interface Club {
 	club_id: string;
@@ -60,23 +61,28 @@ export default function Page() {
     if (isLoading) return <CircularProgress />;
     if (!user) return <Typography variant="h6">User not found.</Typography>;
 	return (
-		<Box sx={{width: '100%', display: 'grid', height: '100vh', gridTemplateColumns: '10px auto 10px'}}>
-			<Box />
-			<Box>
-				<ResponsiveAppBar />
-				<Box sx={{display: 'flex', justifyContent: 'center', pt: 2, pb: 3}}>
-					<Welcome>Welcome {username}!</Welcome>
+	<>
+			<ResponsiveAppBar />
+			<Box sx={{display: 'grid', gridTemplateColumns: '300px auto'}}>
+				<Box sx={{mr: '10px', mt: 2}}>
+					<Navbar />
 				</Box>
-				<Box sx={{display: 'grid', height: '100%', gridTemplateColumns: 'auto auto'}}>
-					<Box sx={{justifySelf: 'center'}}>
-						<Section>Your posts</Section>
+				<Box>
+					<Box sx={{display: 'flex', justifyContent: 'center', pt: 2, pb: 3}}>
+						<Welcome>Welcome {username}!</Welcome>
 					</Box>
-					<Box sx={{justifySelf: 'center'}}>
-						<Section>Upcoming Events</Section>
+					<Box sx={{display: 'grid', height: '100%', gridTemplateColumns: 'auto auto'}}>
+						<Box sx={{justifySelf: 'center'}}>
+							<Section>Your posts</Section>
+						</Box>
+						<Box sx={{justifySelf: 'center'}}>
+							<Section>Upcoming Events</Section>
+						</Box>
 					</Box>
 				</Box>
+				<Box />
 			</Box>
-			<Box />
-		</Box>
+		</>
+		
 	)
 }

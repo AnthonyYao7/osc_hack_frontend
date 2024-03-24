@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import * as React from "react";
 
 import PagesEventsTabs from "../../components/PagesEventsTabs";
+import { Navbar } from '../../../components/Navbar';
 import { PostComponent, Post } from "../../components/Post";
 
 export default function Home() {

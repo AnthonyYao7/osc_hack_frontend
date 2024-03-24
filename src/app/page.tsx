@@ -1,16 +1,16 @@
 "use client";
 
-import { PostComponent, Post } from "../../components/Post";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import PostsPageLayout from "../../components/PostsPageLayout";
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import * as React from 'react';
-import PagesEventsTabs from "../../components/PagesEventsTabs";
+import { Box, Tooltip, Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
+import { useState, useEffect } from "react";
+import * as React from "react";
+
+import PagesEventsTabs from "../../components/PagesEventsTabs";
+import { PostComponent, Post } from "../../components/Post";
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -56,10 +56,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-
-    }
-  })
+    const fetchData = async () => {};
+  });
 
   const theme = useTheme();
 
@@ -67,20 +65,38 @@ export default function Home() {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-  }
+  };
 
   return !isLoading ? (
     <PostsPageLayout>
         <PagesEventsTabs value={value} handleChange={handleChange} />
 
-      {value == 0 && (
-		  <Box sx={{mt:3, width: '100%'}}>
-			  {posts.map((post: Post) => (
-				<PostComponent key={post.post_id} post={post} />
-			  ))}
-		  </Box>
-	  )}
-
+      <Box sx={{ position: "relative", mt: 3, mb: 4, width: "100%" }}>
+        {" "}
+        {value === 0 &&
+          posts.map((post: Post) => (
+            <PostComponent key={post.post_id} post={post} />
+          ))}
+        <a
+          href={value === 0 ? "/createPost" : "/createEvent"}
+          style={{
+            textDecoration: "none",
+            position: "absolute",
+            right: 0,
+            top: "-28px",
+            zIndex: 1,
+          }}
+        >
+          <Tooltip
+            title={value === 0 ? "Create New Post" : "Create New Event"}
+            placement="left"
+          >
+            <Fab color="primary" aria-label="add">
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+        </a>
+      </Box>
     </PostsPageLayout>
   ) : (
     <PostsPageLayout>

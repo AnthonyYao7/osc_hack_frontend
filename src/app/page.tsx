@@ -1,11 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import Grid from "@mui/material/Grid";
-import styles from "./page.module.css";
-import ResponsiveAppBar from "../../components/MenuButtonsAppBar";
 import { PostComponent, Post } from "../../components/Post";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import PostsPageLayout from "../../components/PostsPageLayout";
@@ -34,8 +29,11 @@ export default function Home() {
           throw new Error("Data fetching failed");
         }
         const data = await res.json();
-        console.log(data);
-        setPosts(data);
+        const sortedPosts = data.sort(
+          (a: Post, b: Post) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
+        setPosts(sortedPosts);
       } catch (err) {
         console.log(err);
       } finally {

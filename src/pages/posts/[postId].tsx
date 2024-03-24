@@ -17,7 +17,7 @@ export interface FullPost {
     author: string;
     title: string;
     content: string;
-    createdAt: string;
+    created_at: string;
     community: string;
 
     comments: Comment[]

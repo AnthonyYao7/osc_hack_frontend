@@ -35,7 +35,12 @@ export default function Page() {
                         throw new Error("Data fetching failed");
                     }
                     const data = await res.json();
-                    setCommunityPosts(data);
+
+                    const sortedPosts = data.sort(
+                        (a: Post, b: Post) =>
+                            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+                    );
+                    setCommunityPosts(sortedPosts);
                 } catch (err) {
                     console.log(err);
                 } finally {
@@ -59,19 +64,15 @@ export default function Page() {
                 <Typography variant="h4" component="h1" gutterBottom>
                     Community Posts
                 </Typography>
-                <Paper>
-                    <List>
-                        {isLoading ? (
-                            <CircularProgress />
-                        ) : (
-                            communityPosts.map((post) => (
-                                <ListItem key={post.post_id}>
-                                    <PostComponent post={post} />
-                                </ListItem>
-                            ))
-                        )}
-                    </List>
-                </Paper>
+                {isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    communityPosts.map((post) => (
+                        <ListItem key={post.post_id}>
+                            <PostComponent post={post} />
+                        </ListItem>
+                    ))
+                )}
             </Container>
         </PostsPageLayout>
     );

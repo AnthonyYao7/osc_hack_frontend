@@ -1,18 +1,22 @@
 "use client";
 
-import * as React from "react";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardActionArea from "@mui/material/CardActionArea";
-import CardContent from "@mui/material/CardContent";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+  Box,
+  Chip,
+  Grid,
+} from "@mui/material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 export interface Post {
   post_id: string;
   author: string;
   title: string;
   content: string;
-  createdAt: string;
+  created_at: string;
   community: string;
 }
 
@@ -20,29 +24,103 @@ interface PostProps {
   post: Post;
 }
 
-export function PostComponent(props: PostProps) {
-  const { post } = props;
+export function PostComponent({ post }: PostProps) {
+  const { post_id, title, content, created_at, community } = post;
+
+  // Convert UTC to EDT (-4 hours)
+  function toEDT(dateUtc: string) {
+    const date = new Date(dateUtc);
+    // Convert to EDT by subtracting 4 hours
+    date.setHours(date.getHours() - 4);
+    return date;
+  }
+
+  // Function to calculate relative time
+  function timeSince(date: Date) {
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    let interval = seconds / 31536000;
+
+    if (interval > 1) {
+      return Math.floor(interval) + " years ago";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+      return Math.floor(interval) + " months ago";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+      return Math.floor(interval) + " days ago";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+      return Math.floor(interval) + " hours ago";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+      return Math.floor(interval) + " minutes ago";
+    }
+    return Math.floor(seconds) + " seconds ago";
+  }
+
+  const relativeTime = timeSince(toEDT(created_at));
 
   return (
-    <Grid item xs={12} md={12}>
-      <CardActionArea component="a" href={"/posts/" + post.post_id}>
-        <Card sx={{ display: "flex", border: "1px solid black" }}>
-          <CardContent sx={{ flex: 1 }}>
-            <Typography component="h2" variant="h5">
-              {post.title}
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={11} md={10} lg={9} xl={8}>
+        {" "}
+        {/* Increased width coverage across breakpoints */}
+        <Card
+          sx={{
+            width: "100%",
+            mb: 2,
+            boxShadow: "none",
+            border: "1px solid",
+            borderColor: "grey.300",
+          }}
+        >
+          <CardActionArea
+            component="a"
+            href={`/posts/${post_id}`}
+            sx={{ p: 2 }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 1,
+              }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                {community && `r/${community} · `}
+                {relativeTime}
+              </Typography>
+            </Box>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h2"
+              sx={{ fontWeight: "bold" }}
+            >
+              {title}
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
-              {post.createdAt}
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "-webkit-box",
+                WebkitLineClamp: 3,
+                WebkitBoxOrient: "vertical",
+                mb: 2,
+              }}
+            >
+              {content}
             </Typography>
-            <Typography variant="subtitle1" paragraph>
-              {post.content}
-            </Typography>
-            <Typography variant="subtitle1" color="primary">
-              Continue reading...
-            </Typography>
-          </CardContent>
+          </CardActionArea>
         </Card>
-      </CardActionArea>
+      </Grid>
     </Grid>
   );
 }

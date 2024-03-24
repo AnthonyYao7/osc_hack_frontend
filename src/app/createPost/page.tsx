@@ -1,137 +1,160 @@
-'use client'
-
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Autocomplete,
+  Button,
+  Box,
+  TextField,
+  Typography,
+  Container,
+} from "@mui/material";
 import AuthenticatedPage from "../../../components/AuthenticatedPage";
-import Grid from "@mui/material/Grid";
-import Avatar from "@mui/material/Avatar";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import {useState} from "react";
-import {useRouter} from "next/navigation";
-import {getAuthenticatedHeaders} from "@/util";
+import { getAuthenticatedHeaders } from "@/util";
 
+// Dummy community options for Autocomplete component
+const communityOptions = [
+  { label: "comp-sci", id: "comp-sci" },
+  { label: "pre-med", id: "pre-med" },
+  { label: "aerospace", id: "aerospace" },
+];
 
 export default function Page() {
+  const [post, setPost] = useState({
+    title: "",
+    content: "",
+    club_name: "",
+    community: "",
+  });
+  const [communityInput, setCommunityInput] = useState("");
+  const [titleTooShort, setTitleTooShort] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
+  const router = useRouter();
 
-  /*
-  * Need:
-  * Post Title,
-  * Content,
-  * Community
-  *
-  * */
+  const handleChange = (event: any) => {
+    const { name, value } = event.target;
+    setPost({ ...post, [name]: value });
+  };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
 
-    // @ts-ignore
-    if (data.get('title') == null || (data.get('title').toString().length == 0)) {
+    if (!post.title || post.title.length === 0) {
       setTitleTooShort(true);
       return;
     }
 
     let resp = await fetch(
-      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/posts', {
-        method: 'POST',
+      `${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/posts`,
+      {
+        method: "POST",
         headers: getAuthenticatedHeaders(),
         body: JSON.stringify({
-          author: "god",
-          title: data.get('title'),
-          content: data.get('content'),
-          community: data.get('community'),
+          ...post,
         }),
-      });
+      },
+    );
 
     if (resp.ok) {
-      router.push('/');
+      router.push("/"); // Or to a confirmation/message page
     } else {
       setInvalidInput(true);
     }
-  }
-
-  const [titleTooShort, setTitleTooShort] = useState(false);
-  const [invalidInput, setInvalidInput] = useState(false);
-  const router = useRouter();
+  };
 
   return (
     <AuthenticatedPage>
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Write your post
-        </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                required
-                fullWidth
-                id="title"
-                label="Title"
-                name="title"
-                autoComplete="title"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                required
-                fullWidth
-                name="community"
-                label="Community"
-                type="community"
-                id="community"
-                autoComplete="community"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                multiline
-                rows={4}
-                name="content"
-                label="Content"
-                type="content"
-                id="content"
-                autoComplete="content"
-              />
-            </Grid>
-          </Grid>
-
-          {invalidInput && (
-            <Typography color="red" sx={{ mt: 2, mb: 1 }}>
-              The form data was invalid.
-            </Typography>
-          )}
-
-          {titleTooShort && (
-            <Typography color="red" sx={{ mt: 2, mb: 1 }}>
-              You must have a title.
-            </Typography>
-          )}
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+      <Container component="main" maxWidth="sm">
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            Write Your Post
+          </Typography>
+          <Box
+            component="form"
+            noValidate
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
           >
-            Post
-          </Button>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="title"
+              label="Title"
+              name="title"
+              autoComplete="title"
+              autoFocus
+              value={post.title}
+              onChange={handleChange}
+            />
+            <Autocomplete
+              options={communityOptions}
+              getOptionLabel={(option) => option.label}
+              onChange={(_, newValue) => {
+                setPost({ ...post, community: newValue ? newValue.id : "" });
+                setCommunityInput(newValue ? newValue.id : "");
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Community"
+                  margin="normal"
+                  required
+                />
+              )}
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              name="club_name"
+              label="Club Name"
+              type="text"
+              id="club_name"
+              value={post.club_name}
+              onChange={handleChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              multiline
+              rows={4}
+              name="content"
+              label="Content"
+              type="text"
+              id="content"
+              autoComplete="content"
+              value={post.content}
+              onChange={handleChange}
+            />
+            {titleTooShort && (
+              <Typography color="error" sx={{ mt: 2 }}>
+                The title must not be empty.
+              </Typography>
+            )}
+            {invalidInput && (
+              <Typography color="error" sx={{ mt: 2 }}>
+                Please check your input.
+              </Typography>
+            )}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Post
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      </Container>
     </AuthenticatedPage>
   );
 }
-

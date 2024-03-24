@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
@@ -11,10 +11,11 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import AuthenticationLayout from "../../../components/AuthenticationLayout";
-import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import {setCookie, getCookie} from "cookies-next";
-import OurCopyright from '../../../components/OurCopyright';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { setCookie, getCookie } from "cookies-next";
+
+import OurCopyright from "../../../components/OurCopyright";
 
 export default function Page() {
   const router = useRouter();
@@ -24,11 +25,9 @@ export default function Page() {
     const data = new FormData(event.currentTarget);
 
     let payload = {
-      username: data.get('email'),
-      password: data.get('password'),
+      username: data.get("email"),
+      password: data.get("password"),
     };
-
-    console.log(payload);
 
     let formBody = [];
     for (let property in payload) {
@@ -38,38 +37,39 @@ export default function Page() {
       formBody.push(encodedKey + "=" + encodedValue);
     }
 
-    let formatted = formBody.join('&');
+    let formatted = formBody.join("&");
 
     let resp = await fetch(
-      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/login/sign-in', {
-        method: 'POST',
+      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/login/sign-in",
+      {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         body: formatted,
-    });
+      },
+    );
 
     if (resp.ok) {
       let r = await resp.json();
-      let at = r['access_token']
+      let at = r["access_token"];
 
 	  setCookie('username', payload.username, {secure: true});
       setCookie('token', at, {secure: true});
 
-      router.push('/');
+      router.push("/");
     } else {
       setBadLogin(true);
     }
   };
 
   useEffect(() => {
-    if (getCookie('token') != undefined) {
-      router.push('/');
+    if (getCookie("token") != undefined) {
+      router.push("/");
     }
-  }, [])
+  }, []);
 
   const [badLogin, setBadLogin] = useState(false);
-
 
   return (
     <AuthenticationLayout>
@@ -77,12 +77,12 @@ export default function Page() {
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">

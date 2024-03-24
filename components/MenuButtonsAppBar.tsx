@@ -60,6 +60,7 @@ function ResponsiveAppBar(props: HeaderProps) {
 
   const logoutHandler = () => {
     deleteCookie('token');
+    router.push('/');
   }
 
   const router = useRouter();

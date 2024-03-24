@@ -1,12 +1,13 @@
 'use client'
 
 import * as React from 'react';
+import Image from 'next/image'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+// import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
@@ -19,12 +20,14 @@ import {useTheme} from "@mui/material/styles";
 import {useRouter} from "next/navigation";
 import {deleteCookie} from "cookies-next";
 import {isAuthenticated} from "@/util";
+import styled from 'styled-components';
 
 const pages = [
   {title: 'Create Post', path: '/createPost'},
   {title: 'Create Event', path: '/createEvent'},
   {title: 'Create Club', path: '/createClub'}
 ];
+
 
 interface HeaderProps {
   sections: ReadonlyArray<{
@@ -33,12 +36,68 @@ interface HeaderProps {
   }>;
 }
 
+// Styled component for the header bar
+const HeaderBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+`;
+
+// Styled component for the logo and title container
+const LogoTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+`;
+
+// Styled component for the logo image
+const LogoImage = styled.img`
+  height: 50px; // Set the height of your logo
+  margin-right: 10px;
+`;
+
+// Styled component for the profile picture
+const ProfilePicture = styled.img`
+  height: 50px; // Set the height of your profile picture
+  width: 50px; // Set the width of your profile picture
+  border-radius: 50%; // Make it round
+`;
+
+const ProfileDropdown = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px`;
+
+const Menu = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  top: 61px;
+  right: 15px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  `;
+
+const MenutItem = styled.div`
+  cursor: pointer;
+  `;
+
 function ResponsiveAppBar(props: HeaderProps) {
   const {sections} = props;
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
+	const toggleMenu = () => {
+		setIsMenuOpen(!isMenuOpen);
+		console.log(isMenuOpen);
+	}
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -72,7 +131,7 @@ function ResponsiveAppBar(props: HeaderProps) {
   }
 
   const authenticatedSettings = [
-    {action: 'Profile', handler: profileHandler},
+    {action: 'View Profile', handler: profileHandler},
     {action: 'Logout', handler: logoutHandler},
   ]
 
@@ -84,135 +143,36 @@ function ResponsiveAppBar(props: HeaderProps) {
 
   const theme = useTheme();
 
+
   return (
-    <Box sx={{flexGrow: 1, width: '100%'}}>
-      <AppBar position="static" sx={{backgroundColor: theme.palette.secondary.main}}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: {xs: 'none', md: 'flex'},
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              LOGO
-            </Typography>
+	<HeaderBar>
+		<LogoTitleContainer>
+			<h1>Club Forum</h1>
+		</LogoTitleContainer>
+		<ProfileDropdown onClick={toggleMenu}>
+		  <Tooltip title="Open settings">
+			<IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+			  <Avatar alt="B"/>
+			</IconButton>
+		  </Tooltip>
 
-            <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon/>
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: {xs: 'block', md: 'none'},
-                }}
-              >
-              </Menu>
-            </Box>
-            <AdbIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1}}/>
-            <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              href="#app-bar-with-responsive-menu"
-              sx={{
-                mr: 2,
-                display: {xs: 'flex', md: 'none'},
-                flexGrow: 1,
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              LOGO
-            </Typography>
-            <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-			  {/*
-              {pages.map((page) => (
-                <Button
-                  key={page.title}
-                  onClick={function(...args) {
-                    return handleClickOnMenuOption(...args, page.path);
-                  }}
-                  sx={{my: 2, color: 'white', display: 'block'}}
-                >
-                  {page.title}
-                </Button>
-              ))}
-			  */}
-            </Box>
-
-            <Box sx={{flexGrow: 0}}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                  <Avatar alt="B"/>
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{mt: '45px'}}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting.action} onClick={setting.handler}>
-                    <Typography textAlign="center">{setting.action}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-          </Toolbar>
-          <Toolbar
-            component="nav"
-            variant="dense"
-            sx={{ justifyContent: 'space-between', overflowX: 'auto' }}
-          >
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </Box>
+		  {isMenuOpen && (<Menu>
+			{settings.map((setting) => (
+			  <>
+			    <MenuItem key={setting.action} onClick={setting.handler}>
+				  {setting.action === 'Logout' && (
+				  	<Box sx={{pr: '5px', display: 'flex', justifyContent: 'center'}}>
+				  		<Image src="/logout.png" width={16} height={16} alt="log out"/>
+				  	</Box>
+				  )}
+			  	  {setting.action}
+			    </MenuItem>
+			  </>
+			))}
+		  </Menu>
+		  )}
+	  </ProfileDropdown>
+    </HeaderBar>
   );
 }
 

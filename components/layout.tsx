@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import '../src/app/globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import theme from '../src/theme';
@@ -19,7 +20,17 @@ export default function RootLayout({
     <AppRouterCacheProvider>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          {children}
+			<Box sx={{ 
+				display: 'grid', 
+				gridTemplateColumns: '15px auto 15px',
+				minHeight: '100vh', 
+				}}>
+				<Box />
+				<Box >
+				  {children}
+			    </Box>
+				<Box />
+		    </Box>
         </LocalizationProvider>
       </ThemeProvider>
     </AppRouterCacheProvider>

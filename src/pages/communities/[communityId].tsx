@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText, Box, Tabs, Tab } from '@mui/material';
+import { CircularProgress, Container, Typography, ListItem } from '@mui/material';
 import { useState, useEffect } from "react";
 
 import PostsPageLayout from "../../../components/PostsPageLayout";

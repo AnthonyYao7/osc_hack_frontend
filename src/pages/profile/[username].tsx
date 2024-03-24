@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
-import { CircularProgress, Container, Typography, Paper, Box, IconButton, List, ListItem, ListItemAvatar, Avatar, ListItemText, Chip } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CommentIcon from '@mui/icons-material/Comment';
+import { CircularProgress, Typography, Paper, Box, IconButton, List, ListItem, ListItemAvatar, Avatar, ListItemText, Chip } from '@mui/material';
+import ResponsiveAppBar from '../../../components/MenuButtonsAppBar';
 import { useState, useEffect } from "react";
 import { getCookie } from "cookies-next";
-import PostsPageLayout from "../../../components/PostsPageLayout";
+import styled from 'styled-components';
 
 export interface Club {
 	club_id: string;
@@ -19,6 +18,15 @@ export interface User {
 	affiliations: Club[];
 }
 
+const Welcome = styled.h1`
+	font-size: 2rem;
+	font-weight: bold;
+`;
+
+const Section = styled.h1`
+	font-size: 1.5rem;
+	font-weight: 200;
+`;
 export default function Page() {
 	const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
@@ -52,6 +60,23 @@ export default function Page() {
     if (isLoading) return <CircularProgress />;
     if (!user) return <Typography variant="h6">User not found.</Typography>;
 	return (
-		<h1>Welcome {username}!</h1>
-		)
+		<Box sx={{width: '100%', display: 'grid', height: '100vh', gridTemplateColumns: '10px auto 10px'}}>
+			<Box />
+			<Box>
+				<ResponsiveAppBar />
+				<Box sx={{display: 'flex', justifyContent: 'center', pt: 2, pb: 3}}>
+					<Welcome>Welcome {username}!</Welcome>
+				</Box>
+				<Box sx={{display: 'grid', height: '100%', gridTemplateColumns: 'auto auto'}}>
+					<Box sx={{justifySelf: 'center'}}>
+						<Section>Your posts</Section>
+					</Box>
+					<Box sx={{justifySelf: 'center'}}>
+						<Section>Upcoming Events</Section>
+					</Box>
+				</Box>
+			</Box>
+			<Box />
+		</Box>
+	)
 }

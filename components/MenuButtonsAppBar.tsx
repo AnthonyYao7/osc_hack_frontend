@@ -1,6 +1,7 @@
 'use client'
 import * as React from 'react';
-import Image from 'next/image'
+import Image from 'next/image';
+import Link from'next/link';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
@@ -138,7 +139,7 @@ function ResponsiveAppBar(props: HeaderProps) {
   return (
 	<HeaderBar>
 		<LogoTitleContainer>
-			<h1>Club Forum</h1>
+			<a href="/" style={{color: 'black', textDecoration: 'none'}}>Club Forum</a>
 		</LogoTitleContainer>
 		<ProfileDropdown onClick={toggleMenu}>
 		  <Tooltip title="Open settings">

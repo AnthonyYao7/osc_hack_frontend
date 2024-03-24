@@ -117,7 +117,7 @@ export function EventComponent({ event, affiliations }: EventProps) {
   };
 
   return (
-    <Grid container justifyContent="center">
+    <Grid container justifyContent="center" my={2}>
       <Grid item xs={12} sm={11} md={10} lg={9} xl={8}>
         <Card
           sx={{

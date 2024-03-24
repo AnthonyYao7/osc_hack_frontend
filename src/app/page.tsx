@@ -140,6 +140,7 @@ export default function Home() {
           <Tooltip
             title={value === 0 ? "Create New Post" : "Create New Event"}
             placement="left"
+			sx={{backgroundColor: "black"}}
           >
             <Fab color="primary" aria-label="add">
               <AddIcon />

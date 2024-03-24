@@ -2,6 +2,8 @@ import { useRouter } from 'next/router';
 import { CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText } from '@mui/material';
 import { useState, useEffect } from "react";
 
+import PostsPageLayout from "../../../components/PostsPageLayout";
+
 export interface Comment {
     comment_id: string;
     post_id: string;
@@ -48,7 +50,6 @@ export default function Page() {
                         throw new Error("Data fetching failed");
                     }
                     const data = await res.json();
-                    console.log(data)
                     setPost(data);
                 } catch (err) {
                     console.log(err);
@@ -87,46 +88,48 @@ export default function Page() {
     }
 
     return (
-        <Container maxWidth="md" sx={{ my: 4 }}>
-            <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    {post.title}
+        <PostsPageLayout>
+            <Container maxWidth="md" sx={{ my: 4 }}>
+                <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+                    <Typography variant="h4" component="h1" gutterBottom>
+                        {post.title}
+                    </Typography>
+                    <Typography variant="overline" display="block" gutterBottom>
+                        Author: {post.author} | Community: {post.community}
+                    </Typography>
+                    <Typography variant="body1" paragraph>
+                        {post.content}
+                    </Typography>
+                    <Typography variant="caption" display="block" gutterBottom>
+                        Posted on {new Date(post.createdAt).toLocaleDateString()}
+                    </Typography>
+                </Paper>
+                <Typography variant="h5" sx={{ mb: 2 }}>
+                    Comments
                 </Typography>
-                <Typography variant="overline" display="block" gutterBottom>
-                    Author: {post.author} | Community: {post.community}
-                </Typography>
-                <Typography variant="body1" paragraph>
-                    {post.content}
-                </Typography>
-                <Typography variant="caption" display="block" gutterBottom>
-                    Posted on {new Date(post.createdAt).toLocaleDateString()}
-                </Typography>
-            </Paper>
-            <Typography variant="h5" sx={{ mb: 2 }}>
-                Comments
-            </Typography>
-            <List>
-                {post.comments && post.comments.length > 0 ? (
-                    post.comments.map((comment) => (
-                        <ListItem alignItems="flex-start" key={comment.comment_id}>
-                            <ListItemText
-                                primary={comment.author}
-                                secondary={
-                                    <>
-                                        <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
-                                            {new Date(comment.created_at).toLocaleDateString()}
-                                        </Typography>
-                                        {` — ${comment.content}`}
-                                    </>
-                                }
-                            />
-                            <Divider component="li" />
-                        </ListItem>
-                    ))
-                ) : (
-                    <Typography variant="body2">No comments yet.</Typography>
-                )}
-            </List>
-        </Container>
+                <List>
+                    {post.comments && post.comments.length > 0 ? (
+                        post.comments.map((comment) => (
+                            <ListItem alignItems="flex-start" key={comment.comment_id}>
+                                <ListItemText
+                                    primary={comment.author}
+                                    secondary={
+                                        <>
+                                            <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
+                                                {new Date(comment.created_at).toLocaleDateString()}
+                                            </Typography>
+                                            {` — ${comment.content}`}
+                                        </>
+                                    }
+                                />
+                                <Divider component="li" />
+                            </ListItem>
+                        ))
+                    ) : (
+                        <Typography variant="body2">No comments yet.</Typography>
+                    )}
+                </List>
+            </Container>
+        </PostsPageLayout>
     )
 };

@@ -1,19 +1,78 @@
-import { useRouter } from 'next/router'
-import Typography from "@mui/material/Typography";
-import * as React from "react";
+import { useRouter } from 'next/router';
+import { CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText, Box, Tabs, Tab } from '@mui/material';
+import { useState, useEffect } from "react";
+
 import PostsPageLayout from "../../../components/PostsPageLayout";
+import { Post, PostComponent } from "../../../components/Post";
 
 export default function Page() {
-  const router = useRouter()
+    const router = useRouter()
 
-  // Add logic for querying post from database
+    const [communityPosts, setCommunityPosts] = useState<Post[]>([])
+    const [isLoading, setIsLoading] = useState(false);
 
-  return (
-    <PostsPageLayout>
-      <Typography variant="subtitle1" color="text.secondary">
-        {router.query.communityID}
-      </Typography>
-    </PostsPageLayout>
+    useEffect(() => {
+        if (router.isReady) {
+            const { communityId } = router.query;
 
-  );
+            const fetchData = async () => {
+                setIsLoading(true);
+                try {
+                    const queryParams = {
+                        community: communityId as string,
+                    }
+                    const res = await fetch(
+                        process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts?" + new URLSearchParams(queryParams).toString(),
+                        {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        },
+                    );
+
+                    if (!res.ok) {
+                        throw new Error("Data fetching failed");
+                    }
+                    const data = await res.json();
+                    setCommunityPosts(data);
+                } catch (err) {
+                    console.log(err);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            fetchData();
+
+            // Set up a timer to call fetchData every 5 seconds
+            /* const intervalId = setInterval(fetchData, 5000); */
+
+            // Cleanup function to clear the interval when the component unmounts
+            /* return () => clearInterval(intervalId); */
+        }
+    }, [router.isReady, router.query]);
+
+    return (
+        <PostsPageLayout>
+            <Container>
+                <Typography variant="h4" component="h1" gutterBottom>
+                    Community Posts
+                </Typography>
+                <Paper>
+                    <List>
+                        {isLoading ? (
+                            <CircularProgress />
+                        ) : (
+                            communityPosts.map((post) => (
+                                <ListItem key={post.post_id}>
+                                    <PostComponent post={post} />
+                                </ListItem>
+                            ))
+                        )}
+                    </List>
+                </Paper>
+            </Container>
+        </PostsPageLayout>
+    );
 }

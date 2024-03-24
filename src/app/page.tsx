@@ -12,12 +12,6 @@ import PostsPageLayout from "../../components/PostsPageLayout";
 
 import { useState, useEffect } from "react";
 
-const sections = [
-  { title: "Computer Science", url: "#" },
-  { title: "Pre Health", url: "#" },
-  { title: "Mechanical Engineering", url: "#" },
-];
-
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);

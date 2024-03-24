@@ -1,12 +1,17 @@
 import { useRouter } from 'next/router';
-import { CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText, Box, Tabs, Tab } from '@mui/material';
+import { IconButton, CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText, Box, Tabs, Tab } from '@mui/material';
 import { useState, useEffect } from "react";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import PostsPageLayout from "../../../components/PostsPageLayout";
 import { Post, PostComponent } from "../../../components/Post";
 
 export default function Page() {
     const router = useRouter()
+
+    function handleBack() {
+      router.back(); // Navigates back to the previous page in history
+    }
 
     const [communityPosts, setCommunityPosts] = useState<Post[]>([])
     const [isLoading, setIsLoading] = useState(false);
@@ -53,14 +58,29 @@ export default function Page() {
         }
     }, [router.isReady, router.query]);
 
+    const [value, setValue] = useState(0);
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+      setValue(newValue);
+    }
+
     return (
         <PostsPageLayout>
+          {
+            value == 0 &&
+            (
             <Container>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Community Posts
+              <Box display="flex" alignItems="center" marginBottom={2}>
+                <IconButton
+                  onClick={handleBack}
+                  aria-label="back"
+                  size="large"
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+                <Typography variant="h4" component="h1" gutterBottom sx={{ flexGrow: 1, textAlign: 'center' }}>
+                  r/{router.query.communityId}
                 </Typography>
-                <Paper>
-                    <List>
+              </Box>
                         {isLoading ? (
                             <CircularProgress />
                         ) : (
@@ -70,9 +90,8 @@ export default function Page() {
                                 </ListItem>
                             ))
                         )}
-                    </List>
-                </Paper>
             </Container>
+            )}
         </PostsPageLayout>
     );
 }

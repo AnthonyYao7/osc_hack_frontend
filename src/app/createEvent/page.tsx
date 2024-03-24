@@ -14,6 +14,7 @@ import {useRouter} from "next/navigation";
 import {DatePicker, DateTimePicker, DateTimeValidationError, PickerChangeHandlerContext} from "@mui/x-date-pickers";
 import {DemoContainer, DemoItem} from "@mui/x-date-pickers/internals/demo";
 import dayjs from "dayjs";
+import {getAuthenticatedHeaders} from "@/util";
 
 
 export default function Page() {
@@ -62,9 +63,7 @@ export default function Page() {
     let resp = await fetch(
       process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/events/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthenticatedHeaders(),
         body: JSON.stringify(obj),
       });
 

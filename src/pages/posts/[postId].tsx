@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText } from '@mui/material';
+import { CircularProgress, Container, Typography, Paper, Divider, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState, useEffect } from "react";
 
 import PostsPageLayout from "../../../components/PostsPageLayout";
@@ -17,14 +18,19 @@ export interface FullPost {
     author: string;
     title: string;
     content: string;
-    createdAt: string;
+    created_at: string;
     community: string;
 
     comments: Comment[]
 }
 
+
 export default function Page() {
     const router = useRouter()
+
+    function handleBack() {
+        router.back(); // Navigates back to the previous page in history
+    }
 
     const [post, setPost] = useState<FullPost>()
     const [isLoading, setIsLoading] = useState(false);
@@ -67,69 +73,61 @@ export default function Page() {
             /* return () => clearInterval(intervalId); */
         }
     }, [router.isReady, router.query]);
+    if (isLoading) return <CircularProgress />;
 
-
-    if (isLoading) {
-        return (
-            <Container maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <CircularProgress />
-            </Container>
-        );
-    }
-
-    if (!post) {
-        return (
-            <Container maxWidth="md" sx={{ my: 4 }}>
-                <Typography variant="h5" textAlign="center">
-                    Post not found or does not exist.
-                </Typography>
-            </Container>
-        );
-    }
+    if (!post) return <Typography>Post not found.</Typography>;
 
     return (
         <PostsPageLayout>
-            <Container maxWidth="md" sx={{ my: 4 }}>
-                <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
-                    <Typography variant="h4" component="h1" gutterBottom>
+            <Container maxWidth="md">
+                <IconButton
+                    onClick={handleBack}
+                    aria-label="back"
+                    size="large"
+                    sx={{ mb: 2 }}
+                >
+                    <ArrowBackIcon />
+                </IconButton>
+                <Paper elevation={0} sx={{ padding: "24px", margin: "24px 0", backgroundColor: "#f6f7f8" }}>
+                    <Typography variant="h4" component="h2" gutterBottom>
                         {post.title}
-                    </Typography>
-                    <Typography variant="overline" display="block" gutterBottom>
-                        Author: {post.author} | Community: {post.community}
                     </Typography>
                     <Typography variant="body1" paragraph>
                         {post.content}
                     </Typography>
                     <Typography variant="caption" display="block" gutterBottom>
-                        Posted on {new Date(post.createdAt).toLocaleDateString()}
+                        Posted by {post.author} {post.community && `in r/${post.community} `} on {new Date(post.created_at).toLocaleString()}
                     </Typography>
                 </Paper>
-                <Typography variant="h5" sx={{ mb: 2 }}>
+                <Typography variant="h5" gutterBottom>
                     Comments
                 </Typography>
+                <Divider />
                 <List>
-                    {post.comments && post.comments.length > 0 ? (
+                    {post.comments.length > 0 ? (
                         post.comments.map((comment) => (
-                            <ListItem alignItems="flex-start" key={comment.comment_id}>
+                            <ListItem key={comment.comment_id} alignItems="flex-start">
                                 <ListItemText
-                                    primary={comment.author}
+                                    primary={<Typography variant="subtitle2">{comment.author}</Typography>}
                                     secondary={
                                         <>
-                                            <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
-                                                {new Date(comment.created_at).toLocaleDateString()}
+                                            <Typography variant="body2" color="text.primary">
+                                                {comment.content}
                                             </Typography>
-                                            {` — ${comment.content}`}
+                                            <Typography variant="caption" display="block" gutterBottom>
+                                                {new Date(comment.created_at).toLocaleString()}
+                                            </Typography>
                                         </>
                                     }
                                 />
-                                <Divider component="li" />
+                                <Divider variant="inset" component="li" />
                             </ListItem>
                         ))
                     ) : (
-                        <Typography variant="body2">No comments yet.</Typography>
+                        <Typography>No comments yet.</Typography>
                     )}
                 </List>
             </Container>
         </PostsPageLayout>
-    )
-};
+    );
+}

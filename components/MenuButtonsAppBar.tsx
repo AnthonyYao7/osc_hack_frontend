@@ -144,7 +144,7 @@ function ResponsiveAppBar(props: HeaderProps) {
 	<HeaderBar>
 		<LogoTitleContainer href="/">
 			<LogoImage src="/logo.png" alt="logo"/>
-			Club Forum
+			Club Sphere
 		</LogoTitleContainer>
 		<ProfileDropdown onClick={toggleMenu}>
 		  <Tooltip title="Open settings">

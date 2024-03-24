@@ -1,29 +1,30 @@
-'use client'
+"use client";
 
 import RootLayout from "./layout";
 import ResponsiveAppBar from "./MenuButtonsAppBar";
-import {Inter} from "next/font/google";
+import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
-
 const sections = [
-  { title: 'Computer Science', url: '/communities/computer-science'},
-  { title: 'Pre Health', url: '/communities/pre-health'},
-  { title: 'Mechanical Engineering', url: '/communities/mechanical-engineering'}
-]
+  { title: "comp-sci", url: "/communities/comp-sci" },
+  { title: "pre-health", url: "/communities/pre-health" },
+  {
+    title: "mechanical-engineering",
+    url: "/communities/mechanical-engineering",
+  },
+];
 
-export default function GeneralLayout({children,}:
-  Readonly<{
-    children: React.ReactNode;
-  }>) {
+export default function GeneralLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <RootLayout>
-      <ResponsiveAppBar sections={sections}/>
+      <ResponsiveAppBar sections={sections} />
 
-      <main>
-        {children}
-      </main>
+      <main>{children}</main>
     </RootLayout>
-  )
+  );
 }

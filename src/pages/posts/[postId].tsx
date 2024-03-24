@@ -1,8 +1,12 @@
 import { useRouter } from 'next/router';
 import { CircularProgress, Container, Typography, Paper, Box, IconButton, List, ListItem, ListItemAvatar, Avatar, ListItemText, Chip } from '@mui/material';
+import { Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+import ReplyIcon from '@mui/icons-material/Reply';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CommentIcon from '@mui/icons-material/Comment';
 import { useState, useEffect } from "react";
+
 import PostsPageLayout from "../../../components/PostsPageLayout";
 
 export interface Comment {
@@ -29,6 +33,30 @@ export default function Page() {
     const router = useRouter();
     const [post, setPost] = useState<FullPost | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [showReply, setShowReply] = useState(false); // To toggle reply field
+    const [replyContent, setReplyContent] = useState(""); // To hold reply text
+    const [selectedClub, setSelectedClub] = useState(""); // To hold selected club for the reply
+
+    // Dummy data for clubs, replace with actual data as needed
+    const clubs = [
+        { id: "club1", name: "Club 1" },
+        { id: "club2", name: "Club 2" },
+        { id: "club3", name: "Club 3" },
+    ];
+
+
+    const handleReplyChange = (event) => {
+        setReplyContent(event.target.value);
+    };
+
+    const handleClubChange = (event) => {
+        setSelectedClub(event.target.value);
+    };
+
+    const submitReply = () => {
+        setReplyContent("");
+        setShowReply(false);
+    };
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -69,7 +97,7 @@ export default function Page() {
                     <Chip label={post.club_name} sx={{ backgroundColor: "#f50057", color: 'white' }} />
                 </Box>
                 <Paper elevation={1} sx={{ padding: 3, margin: '24px 0', backgroundColor: "#fff" }}>
-                    <Typography gutterBottom variant="h6" sx={{ fontWeight: 'bold' }}>
+                    <Typography gutterBottom variant="h6">
                         {post.content}
                     </Typography>
                     <Typography variant="caption" sx={{ display: 'block', mb: 2 }}>
@@ -110,6 +138,50 @@ export default function Page() {
                         </ListItem>
                     )) : <Typography sx={{ ml: 2 }}>No comments yet.</Typography>}
                 </List>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<ReplyIcon />}
+                    sx={{ mt: 2 }}
+                    onClick={() => setShowReply(!showReply)}
+                >
+                    Reply
+                </Button>
+                {showReply && (
+                    <Box sx={{ mt: 2 }}>
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            label="Your reply"
+                            multiline
+                            rows={4}
+                            value={replyContent}
+                            onChange={handleReplyChange}
+                            sx={{ mb: 2 }}
+                        />
+                        <FormControl fullWidth>
+                            <InputLabel>Club</InputLabel>
+                            <Select
+                                value={selectedClub}
+                                label="Club"
+                                onChange={handleClubChange}
+                            >
+                                {clubs.map((club) => (
+                                    <MenuItem key={club.id} value={club.id}>{club.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            endIcon={<SendIcon />}
+                            sx={{ mt: 2 }}
+                            onClick={submitReply}
+                        >
+                            Post Reply
+                        </Button>
+                    </Box>
+                )}
             </Container>
         </PostsPageLayout>
     );

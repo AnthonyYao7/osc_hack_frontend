@@ -9,6 +9,15 @@ import Button from "@mui/material/Button";
 import * as React from "react";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import {useEffect} from "react";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import SendIcon from '@mui/icons-material/Send';
 
 
 export default function Page() {
@@ -44,55 +53,89 @@ export default function Page() {
   const [invalidInput, setInvalidInput] = useState(false);
   const router = useRouter();
 
+  interface Club {
+    club_name: string;
+    club_id: string;
+  }
+
+  const [clubs, setClubs] = useState<Club[]>([]);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement> | undefined, clubID: string) => {
+    console.log(clubID);
+
+    fetch(
+      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/clubs/' + clubID + '/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    ).then(r => {
+      alert("You sent a request to join the club");
+    })
+  }
+
+  useEffect(() => {
+    console.log("hgi");
+
+    fetch(process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/clubs', {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json',
+      },
+    }).then(async (r) => {
+      if (!r.ok) {
+        console.log("We are fucked");
+        return;
+      }
+
+      let _clubs = (await r.json())['clubs'];
+      console.log(_clubs);
+      setClubs(_clubs);
+    })
+  }, []);
+
   return (
     <GeneralLayout>
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Request to join a club
-        </Typography>
-        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <Box sx={{
+        width: '400px', // Adjust width as needed
+        margin: 'auto', // Centers the box
+        p: 2, // Adds padding inside the box (optional)
+        border: '1px solid #ccc', // Adds a border for visual clarity (optional)
+        mt: 5, // Adds margin top for spacing from the top
+      }}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 0 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ py: 1, px: 2 }}>Join?</TableCell>
+                <TableCell align="right" sx={{ py: 1, px: 2 }}>Club name</TableCell>
+              </TableRow>
+            </TableHead>
 
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <TextField
-                required
-                fullWidth
-                id="club"
-                label="Club Name"
-                name="club"
-                autoComplete="club"
-              />
-            </Grid>
-          </Grid>
-
-          {clubNameTooShort && (
-            <Typography color="red" sx={{ mt: 2, mb: 1 }}>
-              You must have a club name.
-            </Typography>
-          )}
-
-          {invalidInput && (
-            <Typography color="red" sx={{ mt: 2, mb: 1 }}>
-              Invalid club name.
-            </Typography>
-          )}
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Join
-          </Button>
-        </Box>
+            <TableBody>
+              {clubs.map((club) => (
+                <TableRow
+                  key={club.club_name}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row" sx={{ py: 1, px: 2 }}>
+                    <Button variant="contained" endIcon={<SendIcon />}
+                      onClick={function (...args) {
+                        return handleClick(...args, club.club_id);
+                      }}>
+                      Send
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right" component="th" scope="row" sx={{ py: 1, px: 2 }}>
+                    {club.club_name}
+                  </TableCell>
+                  {/*<TableCell align="right">{row.calories}</TableCell>*/}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
 
     </GeneralLayout>

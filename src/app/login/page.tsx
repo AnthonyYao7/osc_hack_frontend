@@ -16,7 +16,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AuthenticationLayout from "../../../components/AuthenticationLayout";
 import {useRouter} from "next/navigation";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {setCookie, getCookie} from "cookies-next";
+
 
 function Copyright(props: any) {
   return (
@@ -37,32 +39,53 @@ export default function Page() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
+
+    let payload = {
+      username: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+    console.log(payload);
+
+    let formBody = [];
+    for (let property in payload) {
+      let encodedKey = encodeURIComponent(property);
+      // @ts-ignore
+      let encodedValue = encodeURIComponent(payload[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+
+    let formatted = formBody.join('&');
 
     let resp = await fetch(
       process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/login/sign-in', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({
-          username: data.get('email'),
-          password: data.get('password'),
-        }),
+        body: formatted,
     });
 
     if (resp.ok) {
-      console.log(resp);
+      let r = await resp.json();
+      let at = r['access_token']
+
+      setCookie('token', at, {secure: true});
+
       router.push('/');
     } else {
       setBadLogin(true);
     }
   };
 
+  useEffect(() => {
+    if (getCookie('token') != undefined) {
+      router.push('/');
+    }
+  }, [])
+
   const [badLogin, setBadLogin] = useState(false);
+
 
   return (
     <AuthenticationLayout>

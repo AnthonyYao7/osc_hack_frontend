@@ -1,23 +1,15 @@
 'use client'
 import * as React from 'react';
+import userStore from '../src/stores';
 import Image from 'next/image'
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-// import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import Link from '@mui/material/Link';
 import {useTheme} from "@mui/material/styles";
 import {useRouter} from "next/navigation";
-import {deleteCookie} from "cookies-next";
+import {deleteCookie, getCookie} from "cookies-next";
 import {isAuthenticated} from "@/util";
 import styled from 'styled-components';
 
@@ -88,7 +80,6 @@ const MenutItem = styled.div`
 
 function ResponsiveAppBar(props: HeaderProps) {
   const {sections} = props;
-
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -128,6 +119,7 @@ function ResponsiveAppBar(props: HeaderProps) {
   }
 
   const profileHandler = () => {
+  	router.push(`/profile/${getCookie('username')}`);
   }
 
   const authenticatedSettings = [

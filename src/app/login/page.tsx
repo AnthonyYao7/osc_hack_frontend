@@ -4,16 +4,12 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AuthenticationLayout from "../../../components/AuthenticationLayout";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
@@ -57,6 +53,7 @@ export default function Page() {
       let r = await resp.json();
       let at = r['access_token']
 
+	  setCookie('username', payload.username, {secure: true});
       setCookie('token', at, {secure: true});
 
       router.push('/');

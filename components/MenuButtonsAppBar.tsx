@@ -1,6 +1,5 @@
 'use client'
 import * as React from 'react';
-import userStore from '../src/stores';
 import Image from 'next/image'
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';

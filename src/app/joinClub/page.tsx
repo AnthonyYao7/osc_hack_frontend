@@ -18,6 +18,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import SendIcon from '@mui/icons-material/Send';
+import {getAuthenticatedHeaders} from "@/util";
 
 
 export default function Page() {
@@ -66,9 +67,7 @@ export default function Page() {
     fetch(
       process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/clubs/' + clubID + '/request', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthenticatedHeaders(),
       }
     ).then(r => {
       alert("You sent a request to join the club");

@@ -10,6 +10,7 @@ import * as React from "react";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {getCookie} from "cookies-next";
+import {getAuthenticatedHeaders} from "@/util";
 
 
 export default function Page() {
@@ -26,11 +27,7 @@ export default function Page() {
     let resp = await fetch(
       process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/clubs/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'accept': 'application/json',
-          'Authorization': 'Bearer ' + getCookie('token')
-        },
+        headers: getAuthenticatedHeaders(),
         body: JSON.stringify({
           club_name: data.get('club'),
         }),

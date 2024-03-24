@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
+import {getAuthenticatedHeaders} from "@/util";
 
 
 export default function Page() {
@@ -36,9 +37,7 @@ export default function Page() {
     let resp = await fetch(
       process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/posts', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAuthenticatedHeaders(),
         body: JSON.stringify({
           author: "god",
           title: data.get('title'),

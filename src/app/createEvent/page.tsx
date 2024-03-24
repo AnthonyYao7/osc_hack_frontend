@@ -36,29 +36,51 @@ export default function Page() {
       return;
     }
 
+    // @ts-ignore
+    if (data.get('community') == null || (data.get('title').toString().length == 0)) {
+      setCommunityTooShort(true);
+      return;
+    }
+
+    // @ts-ignore
+    if (data.get('club') == null || (data.get('club').toString().length == 0)) {
+      setClubTooShort(true);
+      return;
+    }
+    let obj = {
+      author: "god",
+      title: data.get('title'),
+      description: data.get('content'),
+      community: data.get('community'),
+      club_id: data.get('club'),
+      event_start: startDate.toISOString(),
+      event_end: endDate.toISOString()
+    };
+
+    console.log(obj);
+
     let resp = await fetch(
-      'http://' + process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/posts', {
+      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/events/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          author: "god",
-          title: data.get('title'),
-          content: data.get('content'),
-          community: data.get('community'),
-        }),
+        body: JSON.stringify(obj),
       });
 
     if (resp.ok) {
       router.push('/');
     } else {
       setInvalidInput(true);
+      console.log(resp);
     }
   }
 
   const [titleTooShort, setTitleTooShort] = useState(false);
+  const [clubTooShort, setClubTooShort] = useState(false);
+  const [communityTooShort, setCommunityTooShort] = useState(false);
   const [invalidInput, setInvalidInput] = useState(false);
+
   const router = useRouter();
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
@@ -91,15 +113,6 @@ export default function Page() {
           Create your event
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-
-          {/*
-          Title, club, community
-          date, time start
-          date, time end
-          description
-
-
-          */}
 
           <Grid container spacing={2}>
             <Grid item xs={4}>
@@ -182,6 +195,18 @@ export default function Page() {
           {titleTooShort && (
             <Typography color="red" sx={{ mt: 2, mb: 1 }}>
               You must have a title.
+            </Typography>
+          )}
+
+          {clubTooShort && (
+            <Typography color="red" sx={{ mt: 2, mb: 1 }}>
+              You must have a club.
+            </Typography>
+          )}
+
+          {communityTooShort && (
+            <Typography color="red" sx={{ mt: 2, mb: 1 }}>
+              You must have a community.
             </Typography>
           )}
 

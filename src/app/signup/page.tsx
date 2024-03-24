@@ -46,7 +46,7 @@ export default function Page() {
     });
 
     let resp = await fetch(
-      'http://' + process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/login/sign-up', {
+      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/login/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

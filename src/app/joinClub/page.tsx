@@ -1,49 +1,35 @@
 'use client'
 
 import GeneralLayout from "../../../components/GeneralLayout";
-import Grid from "@mui/material/Grid";
-import Avatar from "@mui/material/Avatar";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import {useState} from "react";
+import Button from "@mui/material/Button";
+import * as React from "react";
 import {useRouter} from "next/navigation";
+import {useState} from "react";
 
 
 export default function Page() {
-
-  /*
-  * Need:
-  * Post Title,
-  * Content,
-  * Community
-  *
-  * */
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
     // @ts-ignore
-    if (data.get('title') == null || (data.get('title').toString().length == 0)) {
-      setTitleTooShort(true);
+    if (data.get('club') == null || (data.get('club').toString().length == 0)) {
+      setClubNameTooShort(true);
       return;
     }
 
     let resp = await fetch(
-      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/posts', {
+      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/clubs/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          author: "god",
-          title: data.get('title'),
-          content: data.get('content'),
-          community: data.get('community'),
+          club_name: data.get('club'),
         }),
       });
 
@@ -54,7 +40,7 @@ export default function Page() {
     }
   }
 
-  const [titleTooShort, setTitleTooShort] = useState(false);
+  const [clubNameTooShort, setClubNameTooShort] = useState(false);
   const [invalidInput, setInvalidInput] = useState(false);
   const router = useRouter();
 
@@ -69,7 +55,7 @@ export default function Page() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Write your post
+          Request to join a club
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 
@@ -78,47 +64,23 @@ export default function Page() {
               <TextField
                 required
                 fullWidth
-                id="title"
-                label="Title"
-                name="title"
-                autoComplete="title"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                required
-                fullWidth
-                name="community"
-                label="Community"
-                type="community"
-                id="community"
-                autoComplete="community"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                multiline
-                rows={4}
-                name="content"
-                label="Content"
-                type="content"
-                id="content"
-                autoComplete="content"
+                id="club"
+                label="Club Name"
+                name="club"
+                autoComplete="club"
               />
             </Grid>
           </Grid>
 
-          {invalidInput && (
+          {clubNameTooShort && (
             <Typography color="red" sx={{ mt: 2, mb: 1 }}>
-              The form data was invalid.
+              You must have a club name.
             </Typography>
           )}
 
-          {titleTooShort && (
+          {invalidInput && (
             <Typography color="red" sx={{ mt: 2, mb: 1 }}>
-              You must have a title.
+              Invalid club name.
             </Typography>
           )}
 
@@ -128,11 +90,11 @@ export default function Page() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Post
+            Join
           </Button>
         </Box>
       </Box>
-    </GeneralLayout>
-  );
-}
 
+    </GeneralLayout>
+  )
+}

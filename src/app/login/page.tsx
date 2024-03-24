@@ -43,7 +43,7 @@ export default function Page() {
     });
 
     let resp = await fetch(
-      'http://' + process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/login/sign-in', {
+      process.env.NEXT_PUBLIC_BACKEND_HOSTNAME  + '/login/sign-in', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,6 +55,7 @@ export default function Page() {
     });
 
     if (resp.ok) {
+      console.log(resp);
       router.push('/');
     } else {
       setBadLogin(true);

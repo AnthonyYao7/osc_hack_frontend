@@ -21,6 +21,7 @@ import {useRouter} from "next/navigation";
 const pages = [
   {title: 'Create Post', path: '/createPost'},
   {title: 'Create Event', path: '/createEvent'},
+  {title: 'Create Club', path: '/createClub'}
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 

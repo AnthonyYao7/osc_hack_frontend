@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Autocomplete,
@@ -12,11 +12,13 @@ import {
 import AuthenticatedPage from "../../../components/AuthenticatedPage";
 import { getAuthenticatedHeaders } from "@/util";
 
-// Dummy community options for Autocomplete component
 const communityOptions = [
-  { label: "comp-sci", id: "comp-sci" },
-  { label: "pre-med", id: "pre-med" },
-  { label: "aerospace", id: "aerospace" },
+  { label: "STEM", id: "STEM" },
+  {
+    label: "Humanities and Social Sciences",
+    id: "Humanities and Social Sciences",
+  },
+  { label: "Professional Studies", id: "Professional Studies" },
 ];
 
 export default function Page() {
@@ -27,10 +29,38 @@ export default function Page() {
     community: "",
   });
   const [communityInput, setCommunityInput] = useState("");
+  const [affiliationsInput, setAffiliationsInput] = useState("");
   const [titleTooShort, setTitleTooShort] = useState(false);
   const [invalidInput, setInvalidInput] = useState(false);
+  const [affiliations, setAffiliations] = useState<
+    {
+      club_id: string;
+      club_name: string;
+    }[]
+  >([]);
+
   const router = useRouter();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const affiliationsRes = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/login/affiliations",
+          {
+            method: "GET",
+            headers: getAuthenticatedHeaders(),
+          },
+        );
+        if (!affiliationsRes.ok) {
+          throw new Error("Data fetching failed");
+        }
+        setAffiliations(await affiliationsRes.json());
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
   const handleChange = (event: any) => {
     const { name, value } = event.target;
     setPost({ ...post, [name]: value });
@@ -105,7 +135,22 @@ export default function Page() {
                 <TextField {...params} label="Community" margin="normal" />
               )}
             />
-            <TextField
+            <Autocomplete
+              options={affiliations}
+              getOptionLabel={(option) => option.club_name}
+              onChange={(_, newValue) => {
+                setPost({
+                  ...post,
+                  club_name: newValue ? newValue.club_name : "",
+                });
+                setAffiliationsInput(newValue ? newValue.club_name : "");
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Club Name" margin="normal" />
+              )}
+            />
+
+            {/* <TextField
               margin="normal"
               fullWidth
               name="club_name"
@@ -115,7 +160,7 @@ export default function Page() {
               value={post.club_name}
               onChange={handleChange}
               required
-            />
+            /> */}
             <TextField
               margin="normal"
               required

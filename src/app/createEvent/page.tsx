@@ -11,6 +11,9 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
+import {DatePicker, DateTimePicker, DateTimeValidationError, PickerChangeHandlerContext} from "@mui/x-date-pickers";
+import {DemoContainer, DemoItem} from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
 
 
 export default function Page() {
@@ -34,7 +37,7 @@ export default function Page() {
     }
 
     let resp = await fetch(
-      'http://' + process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/events/create', {
+      'http://' + process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,6 +60,22 @@ export default function Page() {
   const [titleTooShort, setTitleTooShort] = useState(false);
   const [invalidInput, setInvalidInput] = useState(false);
   const router = useRouter();
+  const [startDate, setStartDate] = useState(dayjs());
+  const [endDate, setEndDate] = useState(dayjs());
+
+  const handleStartDateChange = (newDate: dayjs.Dayjs | null, context: PickerChangeHandlerContext<DateTimeValidationError>) => {
+    if (newDate != null) {
+      setStartDate(newDate);
+      console.log(newDate);
+    }
+  }
+
+  const handleEndDateChange = (newDate: dayjs.Dayjs | null, context: PickerChangeHandlerContext<DateTimeValidationError>) => {
+    if (newDate != null) {
+      setEndDate(newDate);
+      console.log(newDate);
+    }
+  }
 
   return (
     <GeneralLayout>
@@ -69,12 +88,21 @@ export default function Page() {
         }}
       >
         <Typography component="h1" variant="h5">
-          Write your post
+          Create your event
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
 
+          {/*
+          Title, club, community
+          date, time start
+          date, time end
+          description
+
+
+          */}
+
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 required
                 fullWidth
@@ -84,7 +112,18 @@ export default function Page() {
                 autoComplete="title"
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
+              <TextField
+                required
+                fullWidth
+                name="club"
+                label="Club"
+                type="club"
+                id="club"
+                autoComplete="club"
+              />
+            </Grid>
+            <Grid item xs={4}>
               <TextField
                 required
                 fullWidth
@@ -95,6 +134,30 @@ export default function Page() {
                 autoComplete="community"
               />
             </Grid>
+
+            <Grid item xs={6}>
+              <DemoContainer components={['DateTimePicker']}>
+                <DemoItem label="Start date">
+                  <DateTimePicker
+                    label="Choose start date and time"
+                    value={startDate}
+                    onChange={handleStartDateChange}
+                  />
+                </DemoItem>
+              </DemoContainer>
+            </Grid>
+            <Grid item xs={6}>
+              <DemoContainer components={['DateTimePicker']}>
+                <DemoItem label="End date">
+                  <DateTimePicker
+                    label="Choose end date and time"
+                    value={endDate}
+                    onChange={handleEndDateChange}
+                  />
+                </DemoItem>
+              </DemoContainer>
+            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 required
@@ -128,7 +191,7 @@ export default function Page() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Post
+            Create
           </Button>
         </Box>
       </Box>

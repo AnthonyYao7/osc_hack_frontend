@@ -34,7 +34,7 @@ export default function Page() {
     }
 
     let resp = await fetch(
-      'http://' + process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/posts', {
+      'http://' + process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + '/events/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -135,3 +135,4 @@ export default function Page() {
     </GeneralLayout>
   );
 }
+

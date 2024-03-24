@@ -38,16 +38,18 @@ const HeaderBar = styled.div`
 `;
 
 // Styled component for the logo and title container
-const LogoTitleContainer = styled.div`
+const LogoTitleContainer = styled.a`
   display: flex;
   align-items: center;
   font-size: 2rem;
   font-weight: bold;
+  text-decoration: none;
+  color: black;
 `;
 
 // Styled component for the logo image
 const LogoImage = styled.img`
-  height: 50px; // Set the height of your logo
+  height: 40px; // Set the height of your logo
   margin-right: 10px;
 `;
 
@@ -140,8 +142,9 @@ function ResponsiveAppBar(props: HeaderProps) {
 
   return (
 	<HeaderBar>
-		<LogoTitleContainer>
-			<a href="/" style={{color: 'black', textDecoration: 'none'}}>Club Forum</a>
+		<LogoTitleContainer href="/">
+			<LogoImage src="/logo.png" alt="logo"/>
+			Club Forum
 		</LogoTitleContainer>
 		<ProfileDropdown onClick={toggleMenu}>
 		  <Tooltip title="Open settings">

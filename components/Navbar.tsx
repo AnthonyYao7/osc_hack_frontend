@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { clubs } from '../src/communities';
 import styled from 'styled-components';
 import { Box } from '@mui/material';

@@ -52,7 +52,7 @@ export default function Page() {
             content: replyContent
         })
         let resp = await fetch(
-            process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts/" + router.query.postId + "/comment",
+            process.env.NEXT_PUBLIC_BACKEND_HOSTNAME + "/posts/" + router.query.postid + "/comment",
             {
                 method: "POST",
                 headers: getAuthenticatedHeaders(),
@@ -65,7 +65,7 @@ export default function Page() {
 
         if (resp.ok) {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/posts/${router.query.postId}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/posts/${router.query.postid}`, {
                     headers: { "Content-Type": "application/json" },
                 });
                 if (!res.ok) throw new Error("Data fetching failed");
@@ -86,10 +86,10 @@ export default function Page() {
         const fetchPost = async () => {
             if (!router.isReady) return;
 
-            const { postId } = router.query;
+            const { postid } = router.query;
             setIsLoading(true);
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/posts/${postId}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOSTNAME}/posts/${postid}`, {
                     headers: { "Content-Type": "application/json" },
                 });
                 if (!res.ok) throw new Error("Data fetching failed");

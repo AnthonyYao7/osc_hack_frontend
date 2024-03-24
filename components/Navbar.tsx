@@ -20,10 +20,14 @@ const BorderBox = styled.div`
 	}
 `;
 
+const Header = styled.header`
+	font-weight: bold;
+`;
+
 export function Navbar() {
 	return (
 		<Box sx={{ml: '10px', pr: '10px', border: '1px solid', borderStyle: 'none solid none none', borderColor: 'var(--border-color)'}}>
-			<h1>Communities</h1>
+			<Header>Communities</Header>
 			<Box sx={{display: 'flex', flexDirection: 'column', 'alignItems': 'left'}}>
 				{clubs.map((community) => (
 					<BorderBox key={community}>

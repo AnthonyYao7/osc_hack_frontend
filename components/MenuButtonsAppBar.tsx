@@ -152,7 +152,7 @@ function ResponsiveAppBar(props: HeaderProps) {
 		<ProfileDropdown onClick={toggleMenu}>
 		  <Tooltip title="Open settings">
 			<IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-			  <Avatar alt="B"/>
+			  <Avatar src="/prayujt.png" alt="B"/>
 			</IconButton>
 		  </Tooltip>
 

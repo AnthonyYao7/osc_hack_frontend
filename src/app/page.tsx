@@ -71,11 +71,15 @@ export default function Home() {
 
   return !isLoading ? (
     <PostsPageLayout>
-      <PagesEventsTabs value={value} handleChange={handleChange} />
+        <PagesEventsTabs value={value} handleChange={handleChange} />
 
-      {value == 0 && posts.map((post: Post) => (
-        <PostComponent key={post.post_id} post={post} />
-      ))}
+      {value == 0 && (
+		  <Box sx={{mt:3, width: '100%'}}>
+			  {posts.map((post: Post) => (
+				<PostComponent key={post.post_id} post={post} />
+			  ))}
+		  </Box>
+	  )}
 
     </PostsPageLayout>
   ) : (
